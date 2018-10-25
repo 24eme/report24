@@ -13,10 +13,14 @@ while(false !== ($file = $folder->read())){
 }
 
 // calcul des bars de temps passé
-$barsTemps = array();
+$barsTemps = array(); $first = true;
 $pathTemps = $folderName.'/temps.csv';
 if (($handle = fopen($pathTemps, "r")) !== false) {
 		while (($datas = fgetcsv($handle, 1000, ";")) !== false) {
+			if($first){
+				$first = false;
+				 continue;
+			}
 			$datas = array_values($datas);
 			$typeTemps = $datas[3];
 			if(!array_key_exists($typeTemps,$barsTemps)){ $barsTemps[$typeTemps] = 0.0; }
@@ -31,12 +35,19 @@ $barSize = $maxBar * 1.33;
 
 // calcul du restant à payer
 $pathFactures = $folderName.'/factures.csv';
-$restantFactures = 0.0;
+$restantFactures = 0.0; $first = true;
 if (($handle = fopen($pathFactures, "r")) !== false) {
 		while (($datas = fgetcsv($handle, 1000, ";")) !== false) {
+			if($first){
+				$first = false;
+				 continue;
+			}
 			$datas = array_values($datas);
 			if(!array_key_exists($typeTemps,$barsTemps)){ $barsTemps[$typeTemps] = 0.0; }
-			$restantFactures +=  floatval(str_replace(array(',',' ','€'), array('.','',''), $datas[3])) - floatval(str_replace(array(',',' ','€'), array('.','',''), $datas[4]));
+			if(strtoupper($datas[6]) == "FAUX"){
+				$s = str_replace(array(" ",',','€'), array('','.',''), preg_replace("/\s+/", '',$datas[5]));
+				$restantFactures +=  floatval($s);
+			}
 		}
 	fclose($handle);
 }
@@ -72,7 +83,7 @@ if (($handle = fopen($pathFactures, "r")) !== false) {
 				<?php endforeach ?>
 				</div>
 			</div>
-			<div class="col-5 text-right">&nbsp;<h4><?php echo sprintf("%02d",$restantFactures)." €"?><br/>restant à payer</h4></div>
+			<div class="col-5 text-right">&nbsp;<h4><?php echo sprintf("%.2f",$restantFactures)." €"?><br/>restant à payer</h4></div>
 		</div>
 
 
@@ -123,7 +134,7 @@ if (($handle = fopen($pathFactures, "r")) !== false) {
 								<a href="<?php echo 'data/'.$campagne.'/'.$target ?>" target="_blank" class="btn btn-warning"><span class="oi oi-cloud-download"></span> Télécharger le CSV</a>
 							</div>
 						</div>
-					</div> 
+					</div>
 				</div>
 			  	<?php
 			  		$first = false;
