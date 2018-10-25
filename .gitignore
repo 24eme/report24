@@ -1,4 +1,7 @@
 .settings/
 .project
 .buildpath
-sources/*
+project/data/*/temps.csv
+project/data/*/activites.csv
+project/data/*/factures.csv
+
