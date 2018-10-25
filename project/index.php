@@ -8,7 +8,7 @@ $folder = dir($folderName);
 $tabs = array();
 while(false !== ($file = $folder->read())){
 	if($file!="." && $file!=".." && !preg_match('/.example$/', $file)){
-		$tabs[dirname(__FILE__).'/data/'.$campagne.'/'.$file] = strtolower(str_replace('.csv', '', trim($file)));
+		$tabs[$file] = strtolower(str_replace('.csv', '', trim($file)));
 	}
 }
 
@@ -103,7 +103,7 @@ if (($handle = fopen($pathFactures, "r")) !== false) {
 						<div class="col-12">
 							<table class="table table-striped table-bordered table-hover table-sm">
 							<?php
-							if (($handle = fopen($target, "r")) !== false):
+							if (($handle = fopen(dirname(__FILE__).'/data/'.$campagne.'/'.$target, "r")) !== false):
 								$first = true;
 								while (($datas = fgetcsv($handle, 1000, ";")) !== false):
 									$datas = array_values($datas);
@@ -119,10 +119,11 @@ if (($handle = fopen($pathFactures, "r")) !== false) {
 							endif;
 							?>
 							</table>
+							<div class="col-12 text-center">
+								<a href="<?php echo 'data/'.$campagne.'/'.$target ?>" target="_blank" class="btn btn-warning"><span class="oi oi-cloud-download"></span> Télécharger le CSV</a>
+							</div>
 						</div>
-					</div>
-
-
+					</div> 
 				</div>
 			  	<?php
 			  		$first = false;
