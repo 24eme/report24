@@ -1,19 +1,15 @@
 <?php
 setlocale (LC_TIME, 'fr_FR.utf8','fra');
 
-$joursTma = 70;
+$annee = "2018";
 
-$dirTma = dirname(__FILE__).'/sources/tma';
-$dirFactures = dirname(__FILE__).'/sources/factures';
-$dirContrats = dirname(__FILE__).'/sources/contrats';
-
-$contentTma = array_diff(scandir($dirTma), array('..', '.'));
-$contentFactures = array_diff(scandir($dirFactures), array('..', '.'));
-$contentContrats = array_diff(scandir($dirContrats), array('..', '.'));
-
-$hasTma = count($contentTma) > 0;
-$hasFactures = count($contentFactures) > 0;
-$hasContrats = count($contentContrats) > 0;
+$folder = dir(dirname(__FILE__).'/data/'.$annee);
+$tabs = array();
+while(false !== ($file = $folder->read())){
+	if($file!="." && $file!=".."){
+		$tabs[] = $file;
+	}
+}
 ?>
 <!doctype html>
 <html lang="fr">
@@ -39,25 +35,18 @@ $hasContrats = count($contentContrats) > 0;
         		<strong class="text-dark">Interface de gestion de relation client</strong>
       			<strong class="float-right text-dark"><span class="oi oi-person"></span> InterRhône</strong>
       		</div>
-      		
+
       		<ul class="nav nav-tabs nav-justified" id="sections" role="tablist">
-			  	<?php if($hasTma): ?>
-				<li class="nav-item">
-					<a id="sectionTma" data-toggle="tab" role="tab" aria-controls="tma" aria-selected="true" class="nav-link active" href="#tma"><span class="oi oi-timer"></span>&nbsp;Suivi TMA <?php echo date('Y') ?></a>
-				</li>
-			  	<?php endif; ?>
-			  	<?php if($hasFactures): ?>
-				<li class="nav-item">
-					<a id="sectionFactures" data-toggle="tab" role="tab" aria-controls="factures" class="nav-link" href="#factures"><span class="oi oi-euro"></span>&nbsp;Historique factures</a>
-				</li>
-			  	<?php endif; ?>
-			  	<?php if($hasContrats): ?>
-				<li class="nav-item">
-					<a id="sectionContrats" data-toggle="tab" role="tab" aria-controls="contrats" class="nav-link" href="#contrats"><span class="oi oi-document"></span>&nbsp;Documents contractuels</a>
-				</li>
-			  	<?php endif; ?>
+			  	<?php if(count($tabs)):
+						foreach ($tabs as $tabName): ?>
+					<li class="nav-item">
+						<a id="sectionTma" data-toggle="tab" role="tab" aria-controls="<?php echo $tabName; ?>" aria-selected="true" class="nav-link active" href="#<?php echo $tabName; ?>"><span class="oi oi-timer"></span>&nbsp;<?php echo str_replace(".csv","",$tabName); ?>&nbsp;<?php echo date('Y') ?></a>
+					</li>
+			  	<?php
+					endforeach;
+				endif; ?>
 			</ul>
-			
+
 			<div class="tab-content" id="sectionsContent">
 			  	<?php if($hasTma): ?>
 				<div class="tab-pane fade show active" id="tma" role="tabpanel" aria-labelledby="sectionTma">
