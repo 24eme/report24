@@ -1,13 +1,14 @@
 <?php
 setlocale (LC_TIME, 'fr_FR.utf8','fra');
 
-$annee = "2018";
+$campagne = (isset($_GET["campagne"]) && preg_match('/^[0-9]{4}$/', $_GET["campagne"]))? $_GET["campagne"] : date('Y');
 
-$folder = dir(dirname(__FILE__).'/data/'.$annee);
+$folder = dir(dirname(__FILE__).'/data/'.$campagne);
+
 $tabs = array();
 while(false !== ($file = $folder->read())){
-	if($file!="." && $file!=".."){
-		$tabs[] = $file;
+	if($file!="." && $file!=".." && !preg_match('/.example$/', $file)){
+		$tabs[dirname(__FILE__).'/data/'.$campagne.'/'.$file] = strtolower(str_replace('.csv', '', trim($file)));
 	}
 }
 ?>
@@ -19,50 +20,71 @@ while(false !== ($file = $folder->read())){
     	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous" />
     	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/open-iconic/1.1.1/font/css/open-iconic-bootstrap.min.css" />
     	<title>Report24 - </title>
-    	<style type="text/css">
-	    	#tmaSections .oi-chevron-right {
-	    		visibility: hidden;
-	    	}
-	    	#tmaSections .active .oi-chevron-right {
-	    		visibility: visible;
-	    	}
-    	</style>
   </head>
   <body>
 		<div class="container">
       		<div class="py-4">
         		<img src="http://www.24eme.fr/img/24eme.svg" alt="" width="110">
         		<strong class="text-dark">Interface de gestion de relation client</strong>
-      			<strong class="float-right text-dark"><span class="oi oi-person"></span> InterRhône</strong>
+      			<strong class="float-right text-dark"><span class="oi oi-person"></span> <?php echo ucfirst(strtolower(basename(__DIR__))) ?></strong>
       		</div>
 
       		<ul class="nav nav-tabs nav-justified" id="sections" role="tablist">
-			  	<?php if(count($tabs)):
-						foreach ($tabs as $tabName): ?>
-					<li class="nav-item">
-						<a id="sectionTma" data-toggle="tab" role="tab" aria-controls="<?php echo $tabName; ?>" aria-selected="true" class="nav-link active" href="#<?php echo $tabName; ?>"><span class="oi oi-timer"></span>&nbsp;<?php echo str_replace(".csv","",$tabName); ?>&nbsp;<?php echo date('Y') ?></a>
-					</li>
+			  	<?php 
+			  	if(count($tabs)):
+			  		$first = true;
+					foreach ($tabs as $tabName):
+			  	?>
+				<li class="nav-item">
+					<a id="section_<?php echo $tabName ?>" data-toggle="tab" role="tab" aria-controls="<?php echo $tabName; ?>" aria-selected="true" class="nav-link<?php if ($first): ?> active<?php endif; ?>" href="#<?php echo $tabName; ?>"><?php echo ucfirst($tabName); ?></a>
+				</li>
 			  	<?php
+			  		$first = false;
 					endforeach;
-				endif; ?>
+				endif; 
+				?>
 			</ul>
 
 			<div class="tab-content" id="sectionsContent">
-			  	<?php if($hasTma): ?>
-				<div class="tab-pane fade show active" id="tma" role="tabpanel" aria-labelledby="sectionTma">
-					<?php require_once dirname(__FILE__).'/tma.php'; ?>
+			  	<?php 
+			  	if(count($tabs)):
+			  		$first = true;
+					foreach ($tabs as $target => $tabName):
+			  	?>
+				<div class="tab-pane fade show<?php if ($first): ?> active<?php endif; ?>" id="<?php echo $tabName ?>" role="tabpanel" aria-labelledby="section_<?php echo $tabName ?>">
+					
+					
+					
+					<div class="row my-4">
+						<div class="col-12">
+							<table class="table table-striped table-bordered table-hover table-sm">
+							<?php 
+							if (($handle = fopen($target, "r")) !== false):
+								$first = true;
+								while (($datas = fgetcsv($handle, 1000, ";")) !== false):
+									$datas = array_values($datas);
+									$nb = count($datas);
+									echo '<tr>';
+									for ($i=0; $i < $nb; $i++):
+										echo ($first)?  '<th class="text-center">'.$datas[$i].'</th>' : '<td>'.$datas[$i].'</td>';
+									endfor;
+									echo '</tr>';
+									$first = false;
+								endwhile;
+								fclose($handle);
+							endif;
+							?>
+							</table>
+						</div>
+					</div> 
+					
+					
 				</div>
-			  	<?php endif; ?>
-			  	<?php if($hasFactures): ?>
-			  	<div class="tab-pane fade" id="factures" role="tabpanel" aria-labelledby="sectionFactures">
-			  		<?php require_once dirname(__FILE__).'/factures.php'; ?>
-			  	</div>
-			  	<?php endif; ?>
-			  	<?php if($hasContrats): ?>
-			  	<div class="tab-pane fade" id="contrats" role="tabpanel" aria-labelledby="sectionContrats">
-			  		<?php require_once dirname(__FILE__).'/contrats.php'; ?>
-			  	</div>
-			  	<?php endif; ?>
+			  	<?php
+			  		$first = false;
+					endforeach;
+				endif; 
+				?>
 			</div>
   		</div>
 	 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
