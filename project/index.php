@@ -3,14 +3,44 @@ setlocale (LC_TIME, 'fr_FR.utf8','fra');
 
 $campagne = (isset($_GET["campagne"]) && preg_match('/^[0-9]{4}$/', $_GET["campagne"]))? $_GET["campagne"] : date('Y');
 
-$folder = dir(dirname(__FILE__).'/data/'.$campagne);
-
+$folderName = dirname(__FILE__).'/data/'.$campagne;
+$folder = dir($folderName);
 $tabs = array();
 while(false !== ($file = $folder->read())){
 	if($file!="." && $file!=".." && !preg_match('/.example$/', $file)){
 		$tabs[dirname(__FILE__).'/data/'.$campagne.'/'.$file] = strtolower(str_replace('.csv', '', trim($file)));
 	}
 }
+
+// calcul des bars de temps passé
+$barsTemps = array();
+$pathTemps = $folderName.'/temps.csv';
+if (($handle = fopen($pathTemps, "r")) !== false) {
+		while (($datas = fgetcsv($handle, 1000, ";")) !== false) {
+			$datas = array_values($datas);
+			$typeTemps = $datas[3];
+			if(!array_key_exists($typeTemps,$barsTemps)){ $barsTemps[$typeTemps] = 0.0; }
+			$barsTemps[$typeTemps] +=  (floatval(str_replace(',', '.', $datas[2])) / 7.0);
+
+		}
+	fclose($handle);
+}
+usort($barsTemps);
+$maxBar = max($barsTemps);
+$barSize = $maxBar * 1.33;
+
+// calcul du restant à payer
+$pathFactures = $folderName.'/factures.csv';
+$restantFactures = 0.0;
+if (($handle = fopen($pathFactures, "r")) !== false) {
+		while (($datas = fgetcsv($handle, 1000, ";")) !== false) {
+			$datas = array_values($datas);
+			if(!array_key_exists($typeTemps,$barsTemps)){ $barsTemps[$typeTemps] = 0.0; }
+			$restantFactures +=  floatval(str_replace(array(',',' ','€'), array('.','',''), $datas[3])) - floatval(str_replace(array(',',' ','€'), array('.','',''), $datas[4]));
+		}
+	fclose($handle);
+}
+
 ?>
 <!doctype html>
 <html lang="fr">
@@ -29,8 +59,25 @@ while(false !== ($file = $folder->read())){
       			<strong class="float-right text-dark"><span class="oi oi-person"></span> <?php echo ucfirst(strtolower(basename(__DIR__))) ?></strong>
       		</div>
 
+		<div class="row my-4">
+			<div class="col-7">
+				<div class="row">
+				<?php foreach ($barsTemps as $barName => $barTemps) : ?>
+					<div class="col-9" >
+						<div class="progress" style="height: 30px; margin-bottom:10px;">
+						  <div class="progress-bar bg-warning text-dark" role="progressbar" aria-valuenow="<?php echo $barTemps ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo ($barTemps /$barSize) * 100 ?>%"><?php echo $barName ?></div>
+						</div>
+					</div>
+					<div class="col-3"><?php echo round($barTemps * 2 ) / 2; ?> jrs</div>
+				<?php endforeach ?>
+				</div>
+			</div>
+			<div class="col-5 text-right">&nbsp;<h4><?php echo sprintf("%02d",$restantFactures)." €"?><br/>restant à payer</h4></div>
+		</div>
+
+
       		<ul class="nav nav-tabs nav-justified" id="sections" role="tablist">
-			  	<?php 
+			  	<?php
 			  	if(count($tabs)):
 			  		$first = true;
 					foreach ($tabs as $tabName):
@@ -41,24 +88,21 @@ while(false !== ($file = $folder->read())){
 			  	<?php
 			  		$first = false;
 					endforeach;
-				endif; 
+				endif;
 				?>
 			</ul>
 
 			<div class="tab-content" id="sectionsContent">
-			  	<?php 
+			  	<?php
 			  	if(count($tabs)):
 			  		$first = true;
 					foreach ($tabs as $target => $tabName):
 			  	?>
 				<div class="tab-pane fade show<?php if ($first): ?> active<?php endif; ?>" id="<?php echo $tabName ?>" role="tabpanel" aria-labelledby="section_<?php echo $tabName ?>">
-					
-					
-					
 					<div class="row my-4">
 						<div class="col-12">
 							<table class="table table-striped table-bordered table-hover table-sm">
-							<?php 
+							<?php
 							if (($handle = fopen($target, "r")) !== false):
 								$first = true;
 								while (($datas = fgetcsv($handle, 1000, ";")) !== false):
@@ -76,14 +120,14 @@ while(false !== ($file = $folder->read())){
 							?>
 							</table>
 						</div>
-					</div> 
-					
-					
+					</div>
+
+
 				</div>
 			  	<?php
 			  		$first = false;
 					endforeach;
-				endif; 
+				endif;
 				?>
 			</div>
   		</div>
