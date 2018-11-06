@@ -12,8 +12,6 @@ while(false !== ($file = $folder->read())){
 	}
 }
 
-ksort($tabs);
-
 // calcul des bars de temps passé
 $barsTemps = array(); $first = true;
 $pathTemps = $folderName.'/temps.csv';
