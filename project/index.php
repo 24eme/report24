@@ -46,7 +46,7 @@ if (($handle = fopen($pathFactures, "r")) !== false) {
 			}
 			$datas = array_values($datas);
 			if(!array_key_exists($typeTemps,$barsTemps)){ $barsTemps[$typeTemps] = 0.0; }
-			if(strtoupper($datas[4]) == "FAUX"){
+			if($datas[4]){
 				$s = str_replace(array(" ",',','€'), array('','.',''), preg_replace("/\s+/", '',$datas[3]));
 				$restantFactures +=  floatval($s);
 			}
