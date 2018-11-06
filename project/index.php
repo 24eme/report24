@@ -106,7 +106,7 @@ function transform($tableCase){
   <body>
 		<div class="container">
       		<div class="py-4">
-        		<img src="http://www.24eme.fr/img/24eme.svg" alt="" width="110">
+			<img src="https://www.24eme.fr/img/24eme.svg" alt="" width="110">
         		<strong class="text-dark">Interface de gestion de relation client</strong>
       			<strong class="float-right text-dark"><span class="oi oi-person"></span> <?php echo ucfirst(strtolower(basename(__DIR__))) ?></strong>
       		</div>
