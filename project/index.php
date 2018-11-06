@@ -8,9 +8,11 @@ $folder = dir($folderName);
 $tabs = array();
 while(false !== ($file = $folder->read())){
 	if($file!="." && $file!=".." && !preg_match('/.example$/', $file)){
-		$tabs[$file] = strtolower(str_replace('.csv', '', trim($file)));
+		$tabs[$file] = ucfirst(preg_replace("/^[0-9]+-/", "", strtolower(str_replace('.csv', '', trim($file)))));
 	}
 }
+
+ksort($file);
 
 // calcul des bars de temps passé
 $barsTemps = array(); $first = true;
@@ -106,9 +108,9 @@ function transform($tableCase){
   <body>
 		<div class="container">
       		<div class="py-4">
-			<img src="https://www.24eme.fr/img/24eme.svg" alt="" width="110">
+        		<img src="http://www.24eme.fr/img/24eme.svg" alt="" width="110">
         		<strong class="text-dark">Interface de gestion de relation client</strong>
-      			<strong class="float-right text-dark"><span class="oi oi-person"></span> <?php echo ucfirst(strtolower(basename(__DIR__))) ?></strong>
+      			<strong class="float-right text-dark"><span class="oi oi-person"></span> <?php echo ucfirst(strtolower(preg_replace("/_.+$/", "", basename(__DIR__))) ?></strong>
       		</div>
 
 		<div class="row my-4">
