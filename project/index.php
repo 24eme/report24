@@ -7,7 +7,7 @@ $folderName = dirname(__FILE__).'/data/'.$campagne;
 $folder = dir($folderName);
 $tabs = array();
 while(false !== ($file = $folder->read())){
-	if($file!="." && $file!=".." && !preg_match('/.example$/', $file)){
+	if($file!="." && $file!=".." && !preg_match('/(.example|.tmp)$/', $file)){
 		$tabs[$file] = ucfirst(preg_replace("/^[0-9]+-/", "", strtolower(str_replace('.csv', '', trim($file)))));
 	}
 }
@@ -62,9 +62,7 @@ if (($handle = fopen($pathActivites, "r")) !== false) {
 				$first = false;
 				 continue;
 			}
-			$datas = array_values($datas);
-			$attributs = explode(',',$datas[1]);
-			$type = str_replace("Type:",'',$attributs[0]);
+			$type = $datas[2];
 			if($type == 'Commit'){
 				$activites["commits"] +=1;
 			}
