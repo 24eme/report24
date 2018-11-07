@@ -87,8 +87,8 @@ function transform($tableCase){
 		}
 	}
 	$matches = array();
-	if(preg_match('/^([0-9]{4}-[0-9]{2}-[0-9]{2})\ [0-9]{2}:[0-9]{2}:[0-9]{2}/', $tableCase, $matches)){
-		return $matches[1];
+	if(preg_match('/^([0-9]{4})-([0-9]{2})-([0-9]{2})\ [0-9]{2}:[0-9]{2}:[0-9]{2}/', $tableCase, $matches)){
+		return $matches[3]."/". $matches[2]."/". $matches[1];
 	}
 	return str_replace('\n', "<br/>",nl2br($tableCase));
 }
