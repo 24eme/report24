@@ -84,10 +84,17 @@ function transform($tableCase){
 			}
 		}
 	}
-	$matches = array();
-	if(preg_match('/^([0-9]{4})-([0-9]{2})-([0-9]{2})\ [0-9]{2}:[0-9]{2}:[0-9]{2}/', $tableCase, $matches)){
-		return $matches[3]."/". $matches[2]."/". $matches[1];
+	if(preg_match('/^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/', $tableCase)){
+		return "<div class='text-center'>".$tableCase.'</div>';
 	}
+	$matches = array();
+	if(preg_match('/^([0-9]{4})-([0-9]{2})-([0-9]{2})(\ [0-9]{2}:[0-9]{2}:[0-9]{2})?/', $tableCase, $matches)){
+		return "<div class='text-center'>".$matches[3]."/". $matches[2]."/". $matches[1].'</div>';
+	}
+	if(preg_match('/^[0-9\s ]+([,.]{1}[0-9]+)?([\s €]+)?$/', $tableCase)){
+		return "<div class='text-right'>".$tableCase.'</div>';
+	}
+
 	return str_replace('\n', "<br/>",nl2br($tableCase));
 }
 
