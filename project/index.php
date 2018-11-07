@@ -7,8 +7,8 @@ $folderName = dirname(__FILE__).'/data/'.$campagne;
 $folder = dir($folderName);
 $tabs = array();
 while(false !== ($file = $folder->read())){
-	if($file!="." && $file!=".." && !preg_match('/.example$/', $file)){
-		$tabs[$file] = strtolower(str_replace('.csv', '', trim($file)));
+	if($file!="." && $file!=".." && !preg_match('/(.example|.tmp)$/', $file)){
+		$tabs[$file] = ucfirst(preg_replace("/^[0-9]+-/", "", strtolower(str_replace('.csv', '', trim($file)))));
 	}
 }
 
@@ -44,7 +44,7 @@ if (($handle = fopen($pathFactures, "r")) !== false) {
 			}
 			$datas = array_values($datas);
 			if(!array_key_exists($typeTemps,$barsTemps)){ $barsTemps[$typeTemps] = 0.0; }
-			if(strtoupper($datas[4]) == "FAUX"){
+			if(!$datas[4]){
 				$s = str_replace(array(" ",',','€'), array('','.',''), preg_replace("/\s+/", '',$datas[3]));
 				$restantFactures +=  floatval($s);
 			}
@@ -62,9 +62,7 @@ if (($handle = fopen($pathActivites, "r")) !== false) {
 				$first = false;
 				 continue;
 			}
-			$datas = array_values($datas);
-			$attributs = explode(',',$datas[1]);
-			$type = str_replace("Type:",'',$attributs[0]);
+			$type = $datas[2];
 			if($type == 'Commit'){
 				$activites["commits"] +=1;
 			}
@@ -93,6 +91,8 @@ function transform($tableCase){
 	return str_replace('\n', "<br/>",nl2br($tableCase));
 }
 
+$client = ucfirst(strtolower(preg_replace("/_.+$/", "", basename(__DIR__))));
+
 ?>
 <!doctype html>
 <html lang="fr">
@@ -101,14 +101,14 @@ function transform($tableCase){
     	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous" />
     	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/open-iconic/1.1.1/font/css/open-iconic-bootstrap.min.css" />
-    	<title>Report24 - </title>
+		<title>Report24 - <?php echo $client ?></title>
   </head>
   <body>
 		<div class="container">
       		<div class="py-4">
-        		<img src="http://www.24eme.fr/img/24eme.svg" alt="" width="110">
+				<img src="https://www.24eme.fr/img/24eme.svg" alt="" width="110">
         		<strong class="text-dark">Interface de gestion de relation client</strong>
-      			<strong class="float-right text-dark"><span class="oi oi-person"></span> <?php echo ucfirst(strtolower(basename(__DIR__))) ?></strong>
+				<strong class="float-right text-dark"><span class="oi oi-person"></span> <?php echo $client ?></strong>
       		</div>
 
 		<div class="row my-4">
