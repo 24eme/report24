@@ -91,6 +91,8 @@ function transform($tableCase){
 	return str_replace('\n', "<br/>",nl2br($tableCase));
 }
 
+$client = ucfirst(strtolower(preg_replace("/_.+$/", "", basename(__DIR__))));
+
 ?>
 <!doctype html>
 <html lang="fr">
@@ -99,14 +101,14 @@ function transform($tableCase){
     	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous" />
     	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/open-iconic/1.1.1/font/css/open-iconic-bootstrap.min.css" />
-    	<title>Report24 - </title>
+		<title>Report24 - <?php echo $client ?></title>
   </head>
   <body>
 		<div class="container">
       		<div class="py-4">
         		<img src="http://www.24eme.fr/img/24eme.svg" alt="" width="110">
         		<strong class="text-dark">Interface de gestion de relation client</strong>
-				<strong class="float-right text-dark"><span class="oi oi-person"></span> <?php echo ucfirst(strtolower(preg_replace("/_.+$/", "", basename(__DIR__)))) ?></strong>
+				<strong class="float-right text-dark"><span class="oi oi-person"></span> <?php echo $client ?></strong>
       		</div>
 
 		<div class="row my-4">
