@@ -106,7 +106,7 @@ $client = ucfirst(strtolower(preg_replace("/_.+$/", "", basename(__DIR__))));
   <body>
 		<div class="container">
       		<div class="py-4">
-        		<img src="http://www.24eme.fr/img/24eme.svg" alt="" width="110">
+				<img src="https://www.24eme.fr/img/24eme.svg" alt="" width="110">
         		<strong class="text-dark">Interface de gestion de relation client</strong>
 				<strong class="float-right text-dark"><span class="oi oi-person"></span> <?php echo $client ?></strong>
       		</div>
