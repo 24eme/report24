@@ -143,7 +143,7 @@ $client = strtoupper(strtolower(preg_replace("/_.+$/", "", basename(__DIR__))));
 			<div class="col-5" >
 				<div class="card card-default h-100">
 					<div class="card-body">
-						<div class="text-center"><h4><?php echo sprintf("%.2f",$restantFactures)." €"?><br/>restant à payer</h4><hr/>
+						<div class="text-center"><h4><?php echo number_format($restantFactures, 2, ',', ' ')." €"?><br/>restant à payer</h4><hr/>
 							<h4><?php echo $activites["commits"]; ?>&nbsp;commits<br /><?php echo $activites["mails"]; ?>&nbsp;mails</h4>
 						</div>
 					</div>
