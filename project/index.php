@@ -2,6 +2,8 @@
 setlocale (LC_TIME, 'fr_FR.utf8','fra');
 
 $campagne = (isset($_GET["campagne"]) && preg_match('/^[0-9]{4}$/', $_GET["campagne"]))? $_GET["campagne"] : date('Y');
+$folderName = dirname(__FILE__).'/data/'.$campagne;
+$folder = dir($folderName);
 
 //si pas de .csv, on regarde le csv.example
 $fichier_extension = '.csv';
@@ -9,8 +11,6 @@ if (!file_exists($folderName.'/temps'.$fichier_extension)) {
 	$fichier_extension = '.csv.example';
 }
 
-$folderName = dirname(__FILE__).'/data/'.$campagne;
-$folder = dir($folderName);
 $tabs = array();
 while(false !== ($file = $folder->read())){
 	if($file!="." && $file!=".." && preg_match('/'.$fichier_extension.'$/', $file)){
