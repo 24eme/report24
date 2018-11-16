@@ -122,7 +122,7 @@ $client = ucfirst(strtolower(preg_replace("/_.+$/", "", basename(__DIR__))));
 								  <div class="progress-bar bg-warning text-dark" role="progressbar" aria-valuenow="<?php echo $barTemps ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo ($barTemps /$barSize) * 100 ?>%"><?php echo $barName ?></div>
 								</div>
 							</div>
-							<div class="col-3"><?php echo round($barTemps * 2 ) / 2; ?> jrs</div>
+							<div class="col-3"><?php echo round($barTemps * 2 ) / 2; ?> jours</div>
 						<?php endforeach ?>
 						</div>
 					</div>
