@@ -12,9 +12,14 @@ while(false !== ($file = $folder->read())){
 	}
 }
 
+$fichier_extension = '.csv';
+if (!file_exists($folderName.'/temps'.$fichier_extension)) {
+	$fichier_extension = '.csv.example';
+}
+
 // calcul des bars de temps passé
 $barsTemps = array(); $first = true;
-$pathTemps = $folderName.'/temps.csv';
+$pathTemps = $folderName.'/temps'.$fichier_extension;
 if (($handle = fopen($pathTemps, "r")) !== false) {
 		while (($datas = fgetcsv($handle, 1000, ";")) !== false) {
 			if($first){
@@ -34,7 +39,7 @@ $maxBar = max($barsTemps);
 $barSize = $maxBar * 1.33;
 
 // calcul du restant à payer
-$pathFactures = $folderName.'/factures.csv';
+$pathFactures = $folderName.'/factures'.$fichier_extension;
 $restantFactures = 0.0; $first = true;
 if (($handle = fopen($pathFactures, "r")) !== false) {
 		while (($datas = fgetcsv($handle, 1000, ";")) !== false) {
@@ -53,7 +58,7 @@ if (($handle = fopen($pathFactures, "r")) !== false) {
 }
 
 // calcul des types d'activités
-$pathActivites = $folderName.'/activites.csv';
+$pathActivites = $folderName.'/activites'.$fichier_extension;
 $first = true;
 $activites = array("commits" => 0,"mails" => 0,"reunions" => 0);
 if (($handle = fopen($pathActivites, "r")) !== false) {
