@@ -98,7 +98,7 @@ function transform($tableCase){
 	return str_replace('\n', "<br/>",nl2br($tableCase));
 }
 
-$client = ucfirst(strtolower(preg_replace("/_.+$/", "", basename(__DIR__))));
+$client = strtoupper(strtolower(preg_replace("/_.+$/", "", basename(__DIR__))));
 
 ?>
 <!doctype html>
@@ -139,7 +139,7 @@ $client = ucfirst(strtolower(preg_replace("/_.+$/", "", basename(__DIR__))));
 				<div class="card card-default h-100">
 					<div class="card-body">
 						<div class="text-center"><h4><?php echo sprintf("%.2f",$restantFactures)." €"?><br/>restant à payer</h4><hr/>
-							<h4><?php echo $activites["commits"]; ?>&nbsp;commits&nbsp;/&nbsp;<?php echo $activites["mails"]; ?>&nbsp;mails<br/><?php echo $activites["reunions"]; ?>&nbsp;réunions</h4>
+							<h4><?php echo $activites["commits"]; ?>&nbsp;commits<br /><?php echo $activites["mails"]; ?>&nbsp;mails</h4>
 						</div>
 					</div>
 				</div>
