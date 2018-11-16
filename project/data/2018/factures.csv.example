@@ -1,4 +1,4 @@
-Date;Numéro;Type;Montant TTC;Reglé;Date paiement;Libellé paiement
-2017-12-08;109;Frais;208,08 €;FAUX;;
-2018-01-31;118;TMA;6 000,00 €;VRAI;15/05/2018;REM CHQ REF06064R04
-2018-04-30;144;TMA;6 000,00 €;FAUX;;
+Date;Numéro;Libellé;Montant TTC;Date paiement
+2017-12-08;109;Frais;208,08 €;
+2018-01-31;118;TMA;6 000,00 €;15/05/2018
+2018-04-30;144;TMA;6 000,00 €;
