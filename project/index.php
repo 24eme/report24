@@ -107,6 +107,8 @@ function transform($tableCase){
 
 $client = strtoupper(strtolower(preg_replace("/_.+$/", "", basename(__DIR__))));
 
+uasort($tabs, function($a, $b) {  if($a[0] == "F") { $a[0] = "Z"; } if($b[0] = "F") { $b[0] = "Z"; } return $a < $b; });
+
 ?>
 <!doctype html>
 <html lang="fr">
