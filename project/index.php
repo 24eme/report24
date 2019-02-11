@@ -166,7 +166,7 @@ uasort($tabs, function($a, $b) {  if($a[0] == "F") { $a[0] = "Z"; } if($b[0] = "
 			</div>
 
 			<?php if(!count($tabs)): ?>
-				<p>Aucune données pour cette année</p>
+				<p>Aucune donnée pour cette année</p>
 			<?php else: ?>
 	      		<ul class="nav nav-tabs nav-justified" id="sections" role="tablist">
 				  	<?php
