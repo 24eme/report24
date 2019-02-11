@@ -2,6 +2,7 @@
 setlocale (LC_TIME, 'fr_FR.utf8','fra');
 
 $campagne = (isset($_GET["campagne"]) && preg_match('/^[0-9]{4}$/', $_GET["campagne"]))? $_GET["campagne"] : date('Y');
+$campagnes = array("2019", "2018");
 $folderName = dirname(__FILE__).'/data/'.$campagne;
 $folder = dir($folderName);
 
@@ -12,7 +13,7 @@ if (!file_exists($folderName.'/temps'.$fichier_extension)) {
 }
 
 $tabs = array();
-while(false !== ($file = $folder->read())){
+while(false !== (file_exists($folderName) && $file = $folder->read())){
 	if($file!="." && $file!=".." && preg_match('/'.$fichier_extension.'$/', $file)){
 		$tabs[$file] = ucfirst(preg_replace("/^[0-9]+-/", "", strtolower(str_replace($fichier_extension, '', trim($file)))));
 	}
@@ -35,7 +36,7 @@ if (($handle = fopen($pathTemps, "r")) !== false) {
 		}
 	fclose($handle);
 }
-usort($barsTemps);
+ksort($barsTemps);
 $maxBar = max($barsTemps);
 $barSize = $maxBar * 1.33;
 
@@ -124,50 +125,64 @@ $client = strtoupper(strtolower(preg_replace("/_.+$/", "", basename(__DIR__))));
 				<strong class="float-right text-dark"><span class="oi oi-person"></span> <?php echo $client ?></strong>
       		</div>
 
-		<div class="row my-4">
-			<div class="col-7">
-				<div class="card card-default h-100">
-					<div class="card-body">
-						<div class="row">
-						<?php foreach ($barsTemps as $barName => $barTemps) : ?>
-							<div class="col-9" >
-								<div class="progress" style="height: 30px; margin-bottom:10px;">
-								  <div class="progress-bar bg-warning text-dark" role="progressbar" aria-valuenow="<?php echo $barTemps ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo ($barTemps /$barSize) * 100 ?>%"><?php echo $barName ?></div>
+			<form id="form_campagne" method="GET" action="">Tableau de bord pour l'année
+				<select name="campagne" onchange="document.querySelector('form#form_campagne').submit();">
+					<?php foreach($campagnes as $c): ?>
+						<option value="<?php echo $c; ?>" <?php if($campagne == $c): ?>selected="selected"<?php endif; ?>><?php echo $c; ?></option>
+					<?php endforeach; ?>
+				</select>
+			</form>
+
+			<div class="row my-4">
+				<div class="col-7">
+					<div class="card card-default h-100">
+						<div class="card-body">
+							<h5 class="card-title">Résumé des temps passés</h5>
+							<div class="row">
+							<?php foreach ($barsTemps as $barName => $barTemps) : ?>
+								<div class="col-9" >
+									<div class="progress" style="height: 30px; margin-bottom:10px;">
+									  <div class="progress-bar bg-warning text-dark" role="progressbar" aria-valuenow="<?php echo $barTemps ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo ($barTemps /$barSize) * 100 ?>%"><?php echo $barName ?></div>
+									</div>
 								</div>
+								<div class="col-3 text-right"><?php echo round($barTemps * 2 ) / 2; ?> jours</div>
+							<?php endforeach ?>
 							</div>
-							<div class="col-3 text-right"><?php echo round($barTemps * 2 ) / 2; ?> jours</div>
-						<?php endforeach ?>
+						</div>
+					</div>
+				</div>
+				<div class="col-5" >
+					<div class="card card-default h-100">
+						<div class="card-body text-center">
+							<h5 class="card-title">Résumé des factures</h5>
+							<h4><?php echo number_format($restantFactures, 2, ',', ' ')." €"?><br/>restant à payer</h4><hr/>
+							<h5 class="card-title">Résumé de l'activité</h5>
+								<h4><?php echo $activites["commits"]; ?>&nbsp;commits<br /><?php echo $activites["mails"]; ?>&nbsp;mails</h4>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="col-5" >
-				<div class="card card-default h-100">
-					<div class="card-body">
-						<div class="text-center"><h4><?php echo number_format($restantFactures, 2, ',', ' ')." €"?><br/>restant à payer</h4><hr/>
-							<h4><?php echo $activites["commits"]; ?>&nbsp;commits<br /><?php echo $activites["mails"]; ?>&nbsp;mails</h4>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
 
+			<?php if(!count($tabs)): ?>
+				<p>Aucune données pour cette année</p>
+			<?php else: ?>
+	      		<ul class="nav nav-tabs nav-justified" id="sections" role="tablist">
+				  	<?php
+				  	if(count($tabs)):
+				  		$first = true;
+						foreach ($tabs as $tabName):
+				  	?>
+					<li class="nav-item">
+						<a id="section_<?php echo $tabName ?>" data-toggle="tab" role="tab" aria-controls="<?php echo $tabName; ?>" aria-selected="true" class="nav-link<?php if ($first): ?> active<?php endif; ?>" href="#<?php echo $tabName; ?>"><?php echo ucfirst($tabName); ?></a>
+					</li>
+				  	<?php
+				  		$first = false;
+						endforeach;
+					endif;
+					?>
+				</ul>
+			<?php endif; ?>
 
-      		<ul class="nav nav-tabs nav-justified" id="sections" role="tablist">
-			  	<?php
-			  	if(count($tabs)):
-			  		$first = true;
-					foreach ($tabs as $tabName):
-			  	?>
-				<li class="nav-item">
-					<a id="section_<?php echo $tabName ?>" data-toggle="tab" role="tab" aria-controls="<?php echo $tabName; ?>" aria-selected="true" class="nav-link<?php if ($first): ?> active<?php endif; ?>" href="#<?php echo $tabName; ?>"><?php echo ucfirst($tabName); ?></a>
-				</li>
-			  	<?php
-			  		$first = false;
-					endforeach;
-				endif;
-				?>
-			</ul>
 
 			<div class="tab-content" id="sectionsContent">
 			  	<?php
