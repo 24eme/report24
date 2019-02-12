@@ -143,7 +143,7 @@ uasort($tabs, function($a, $b) {  if($a[0] == "F") { $a[0] = "Z"; } if($b[0] = "
 							<div class="row">
 							<?php foreach ($barsTemps as $barName => $barTemps) : ?>
 								<div class="col-9" >
-									<div class="progress" style="height: 30px; margin-bottom:10px;">
+									<div class="progress" style="height: 30px; margin-bottom:10px; background-color: white;">
 									  <div class="progress-bar bg-warning text-dark" role="progressbar" aria-valuenow="<?php echo $barTemps ?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo ($barTemps /$barSize) * 100 ?>%"><?php echo $barName ?></div>
 									</div>
 								</div>
