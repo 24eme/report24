@@ -115,6 +115,7 @@ uasort($tabs, function($a, $b) {  if($a[0] == "F") { $a[0] = "Z"; } if($b[0] = "
 	<head>
 		<meta charset="utf-8" />
     	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+	<meta name="robots" content="noindex, nofollow"/>
     	<link rel="stylesheet" type="text/css" href="/libs/bootstrap/4.1.0/css/bootstrap.min.css" />
     	<link rel="stylesheet" type="text/css" href="/libs/open-iconic/1.1.1/css/open-iconic-bootstrap.min.css" />
 		<title>Report24 - <?php echo $client ?></title>
