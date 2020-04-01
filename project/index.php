@@ -3,7 +3,8 @@ setlocale (LC_TIME, 'fr_FR.utf8','fra');
 
 $dateToday = new DateTime();
 $dateToday->modify("-1 month");
-$campagne = (isset($_GET["campagne"]) && preg_match('/^[0-9]{4}$/', $_GET["campagne"]))? $_GET["campagne"] : $dateToday->format('Y');+$campagnes = array();
+$campagne = (isset($_GET["campagne"]) && preg_match('/^[0-9]{4}$/', $_GET["campagne"]))? $_GET["campagne"] : $dateToday->format('Y');
+$campagnes = array();
 for($i=date('Y')*1; $i >= 2018; $i--) {
        $campagnes[] = $i."";
 }    
