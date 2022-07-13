@@ -135,7 +135,7 @@ uasort($tabs, function($a, $b) {  if($a[0] == "F") { $a[0] = "Z"; } if($b[0] = "
 					<span class="oi oi-person"></span> <?php echo strtoupper($client) ?>
 					<?php if ($clientConf && isset($clientConf['FACTURE_EMAILS'])): ?>
 					<br />
-					<span class="font-weight-normal"><a href="mailto:votreadresse@mail.fr"><span class="oi oi-envelope-closed"></span> Contacter</span></a>
+					<span class="font-weight-normal"><a href="mailto:<?php $clientConf['FACTURE_EMAILS'] ?>"><span class="oi oi-envelope-closed"></span> <?php $clientConf['FACTURE_EMAILS'] ?></span></a>
 					<?php endif; ?>
 				</strong>
       		</div>
