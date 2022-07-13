@@ -109,8 +109,9 @@ function transform($tableCase){
 
 	return str_replace('\n', "<br/>",nl2br($tableCase));
 }
+$client = strtolower(preg_replace("/_.+$/", "", basename(__DIR__)));
 
-$client = strtoupper(strtolower(preg_replace("/_.+$/", "", basename(__DIR__))));
+$clientConf = parse_ini_file(dirname(__FILE__)."/../../config/$client.inc");
 
 uasort($tabs, function($a, $b) {  if($a[0] == "F") { $a[0] = "Z"; } if($b[0] = "F") { $b[0] = "Z"; } return $a < $b; });
 
@@ -123,14 +124,20 @@ uasort($tabs, function($a, $b) {  if($a[0] == "F") { $a[0] = "Z"; } if($b[0] = "
 	<meta name="robots" content="noindex, nofollow"/>
     	<link rel="stylesheet" type="text/css" href="/libs/bootstrap/4.1.0/css/bootstrap.min.css" />
     	<link rel="stylesheet" type="text/css" href="/libs/open-iconic/1.1.1/css/open-iconic-bootstrap.min.css" />
-		<title>Report24 - <?php echo $client ?></title>
+		<title>Report24 - <?php echo strtoupper($client) ?></title>
   </head>
   <body>
 		<div class="container">
       		<div class="py-4">
 				<img src="https://www.24eme.fr/img/24eme.svg" alt="" width="110">
         		<strong class="text-dark">Interface de gestion de relation client</strong>
-				<strong class="float-right text-dark"><span class="oi oi-person"></span> <?php echo $client ?></strong>
+				<strong class="float-right text-dark">
+					<span class="oi oi-person"></span> <?php echo strtoupper($client) ?>
+					<?php if ($clientConf && isset($clientConf['FACTURE_EMAILS'])): ?>
+					<br />
+					<span class="font-weight-normal"><a href="mailto:votreadresse@mail.fr"><span class="oi oi-envelope-closed"></span> Contacter</span></a>
+					<?php endif; ?>
+				</strong>
       		</div>
 
 			<form id="form_campagne" method="GET" action="">Tableau de bord pour l'année
